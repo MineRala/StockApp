@@ -9,11 +9,13 @@ import UIKit
 import SnapKit
 
 final class HomeViewController: UIViewController {
+    let titleLabel = UILabel()
+    let viewOne = UIView()
     private lazy var headerView: UIView = {
         let header = UIView()
         header.backgroundColor = .black
         
-        let titleLabel = UILabel()
+        
         titleLabel.text = "Sembol"
         titleLabel.font = UIFont.boldSystemFont(ofSize: 16)
         titleLabel.textColor = .white
@@ -21,31 +23,35 @@ final class HomeViewController: UIViewController {
         
         header.addSubview(titleLabel)
        
-        let button = UIButton(type: .system)
-               button.setTitle("Son", for: .normal)
-               button.setTitleColor(.white, for: .normal)
-               button.backgroundColor = .black
-               button.layer.borderColor = UIColor.gray.cgColor
-               button.layer.borderWidth = 3.0
-               button.layer.cornerRadius = 8.0
-               button.translatesAutoresizingMaskIntoConstraints = false
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 80)
-               // İkonu ayarlayın
-               let icon = UIImage(systemName: "chevron.down")
-               button.setImage(icon, for: .normal)
-               button.tintColor = .white
-               
-               // İçerik yerleşimini ayarlayın
-               button.contentHorizontalAlignment = .left // İçeriği sağa yasla
-               
-               // İkon ve başlık için içerik insets ayarlayın
-        
-               
-               button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
-               
-        header.addSubview(button)
+      
               
+        viewOne.backgroundColor = .black
+        viewOne.layer.borderColor = UIColor.gray.cgColor
+        viewOne.layer.borderWidth = 3.0
+        viewOne.layer.cornerRadius = 8.0
+               let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showPopover))
+               view.addGestureRecognizer(tapGesture)
+               
          
+               
+        header.addSubview(viewOne)
+              
+            let textLabel = UILabel()
+        textLabel.translatesAutoresizingMaskIntoConstraints = false
+        textLabel.textColor = .white
+        textLabel.font = UIFont.boldSystemFont(ofSize: 20)
+        textLabel.text = "Son"
+            
+        viewOne.addSubview(textLabel)
+        
+            let downImageView = UIImageView()
+            downImageView.translatesAutoresizingMaskIntoConstraints = false
+            downImageView.image = UIImage(systemName: "chevron.down")
+            downImageView.tintColor = .white
+            downImageView.contentMode = .scaleAspectFit
+       
+        viewOne.addSubview(downImageView)
+        
         
         titleLabel.snp.makeConstraints { make in
                    make.leading.equalToSuperview().offset(28)
@@ -54,13 +60,27 @@ final class HomeViewController: UIViewController {
                    make.bottom.equalToSuperview().offset(-10)
         }
         
-        button.snp.makeConstraints { make in
+        viewOne.snp.makeConstraints { make in
                    make.trailing.equalToSuperview().offset(-10)
             make.width.equalToSuperview().multipliedBy(0.3)
                    
             make.centerY.equalToSuperview()
             make.height.equalTo(40)
-               }
+        }
+        downImageView.snp.makeConstraints { make in
+                   make.trailing.equalToSuperview().offset(-4)
+            make.width.height.equalTo(16)
+            make.centerY.equalToSuperview()
+        }
+        
+        textLabel.snp.makeConstraints { make in
+            make.trailing.equalTo(downImageView.snp.leading).offset(-4)
+            make.centerY.equalToSuperview()
+            make.height.equalTo(24)
+           
+        }
+        
+        
         
         return header
     }()
@@ -140,6 +160,23 @@ final class HomeViewController: UIViewController {
         
         
     }
+    
+    @objc private func showPopover() {
+           // Popover içerik view controller'ı
+           let popoverContent = PopoverViewController()
+           
+           // Popover için ayarları yapın
+           popoverContent.modalPresentationStyle = .popover
+           if let popover = popoverContent.popoverPresentationController {
+               popover.sourceView = viewOne
+               popover.sourceRect = viewOne.bounds
+               popover.permittedArrowDirections = .up // Ok yönü
+               popover.delegate = self // Opsiyonel, daha fazla kontrol için
+           }
+
+           // Popover'ı göster
+           present(popoverContent, animated: true, completion: nil)
+       }
 }
 
 //MARK: - TableView DataSource
