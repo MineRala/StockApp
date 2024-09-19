@@ -20,27 +20,29 @@ final class HomeViewController: UIViewController {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         header.addSubview(titleLabel)
-        
+       
         let button = UIButton(type: .system)
-               button.setTitle("Son ", for: .normal)
+               button.setTitle("Son", for: .normal)
                button.setTitleColor(.white, for: .normal)
                button.backgroundColor = .black
                button.layer.borderColor = UIColor.gray.cgColor
                button.layer.borderWidth = 3.0
                button.layer.cornerRadius = 8.0
                button.translatesAutoresizingMaskIntoConstraints = false
-        let icon = UIImage(systemName: "arrow.right") // İkon olarak sistem ikonunu kullanıyoruz
+        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 80)
+               // İkonu ayarlayın
+               let icon = UIImage(systemName: "chevron.down")
                button.setImage(icon, for: .normal)
-               button.tintColor = .white // İkonun rengini ayarlayın
+               button.tintColor = .white
+               
+               // İçerik yerleşimini ayarlayın
+               button.contentHorizontalAlignment = .left // İçeriği sağa yasla
                
                // İkon ve başlık için içerik insets ayarlayın
-               button.contentHorizontalAlignment = .left // İçeriği sola yasla
-               button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 0) // İkon için sol boşluk
-               button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 0) // Başlık için sağ boşluk
+        
                
                button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
                
-
         header.addSubview(button)
               
          
