@@ -7,21 +7,32 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E811FEAD2C9F1E8F001AF4AB /* StockDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E811FEAC2C9F1E8F001AF4AB /* StockDataModel.swift */; };
+		E811FEB02C9F504D001AF4AB /* String+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E811FEAF2C9F504D001AF4AB /* String+Ext.swift */; };
+		E811FEB32C9F541C001AF4AB /* ArrowType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E811FEB22C9F541C001AF4AB /* ArrowType.swift */; };
+		E811FEB52C9F54FE001AF4AB /* SelectedViewOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = E811FEB42C9F54FE001AF4AB /* SelectedViewOption.swift */; };
 		E8DAE4722C9C09E600BF764D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DAE4712C9C09E600BF764D /* AppDelegate.swift */; };
 		E8DAE4742C9C09E600BF764D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DAE4732C9C09E600BF764D /* SceneDelegate.swift */; };
 		E8DAE4762C9C09E600BF764D /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DAE4752C9C09E600BF764D /* HomeViewController.swift */; };
 		E8DAE47B2C9C09E800BF764D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E8DAE47A2C9C09E800BF764D /* Assets.xcassets */; };
 		E8DAE47E2C9C09E800BF764D /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E8DAE47D2C9C09E800BF764D /* Base */; };
 		E8DAE4912C9C0C2000BF764D /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DAE4902C9C0C2000BF764D /* HomeViewModel.swift */; };
-		E8DAE49A2C9C0D2000BF764D /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = E8DAE4992C9C0D2000BF764D /* SnapKit */; };
 		E8DAE49C2C9C0E0B00BF764D /* StockTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DAE49B2C9C0E0B00BF764D /* StockTableViewCell.swift */; };
-		E8DAE49E2C9C202B00BF764D /* StateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DAE49D2C9C202B00BF764D /* StateView.swift */; };
-		E8DAE4A02C9C33AE00BF764D /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DAE49F2C9C33AE00BF764D /* HeaderView.swift */; };
+		E8DAE49E2C9C202B00BF764D /* ArrowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DAE49D2C9C202B00BF764D /* ArrowView.swift */; };
+		E8DAE4A02C9C33AE00BF764D /* SelectedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DAE49F2C9C33AE00BF764D /* SelectedView.swift */; };
 		E8DAE4A62C9C715600BF764D /* PopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DAE4A52C9C715600BF764D /* PopoverViewController.swift */; };
 		E8DAE4A82C9CBCB600BF764D /* DataTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DAE4A72C9CBCB600BF764D /* DataTypeTableViewCell.swift */; };
+		E8FE89FF2C9E114C00424C74 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = E8FE89FE2C9E114C00424C74 /* SnapKit */; };
+		E8FE8A012C9EB85A00424C74 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FE8A002C9EB85A00424C74 /* UserDefaultsManager.swift */; };
+		E8FE8A032C9EE57C00424C74 /* StockModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FE8A022C9EE57C00424C74 /* StockModel.swift */; };
+		E8FE8A052C9EE65D00424C74 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FE8A042C9EE65D00424C74 /* NetworkManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E811FEAC2C9F1E8F001AF4AB /* StockDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDataModel.swift; sourceTree = "<group>"; };
+		E811FEAF2C9F504D001AF4AB /* String+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Ext.swift"; sourceTree = "<group>"; };
+		E811FEB22C9F541C001AF4AB /* ArrowType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrowType.swift; sourceTree = "<group>"; };
+		E811FEB42C9F54FE001AF4AB /* SelectedViewOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedViewOption.swift; sourceTree = "<group>"; };
 		E8DAE46E2C9C09E600BF764D /* StockApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StockApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8DAE4712C9C09E600BF764D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E8DAE4732C9C09E600BF764D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -31,10 +42,13 @@
 		E8DAE47F2C9C09E800BF764D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E8DAE4902C9C0C2000BF764D /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		E8DAE49B2C9C0E0B00BF764D /* StockTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTableViewCell.swift; sourceTree = "<group>"; };
-		E8DAE49D2C9C202B00BF764D /* StateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateView.swift; sourceTree = "<group>"; };
-		E8DAE49F2C9C33AE00BF764D /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		E8DAE49D2C9C202B00BF764D /* ArrowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrowView.swift; sourceTree = "<group>"; };
+		E8DAE49F2C9C33AE00BF764D /* SelectedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedView.swift; sourceTree = "<group>"; };
 		E8DAE4A52C9C715600BF764D /* PopoverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverViewController.swift; sourceTree = "<group>"; };
 		E8DAE4A72C9CBCB600BF764D /* DataTypeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTypeTableViewCell.swift; sourceTree = "<group>"; };
+		E8FE8A002C9EB85A00424C74 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
+		E8FE8A022C9EE57C00424C74 /* StockModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockModel.swift; sourceTree = "<group>"; };
+		E8FE8A042C9EE65D00424C74 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,13 +56,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E8DAE49A2C9C0D2000BF764D /* SnapKit in Frameworks */,
+				E8FE89FF2C9E114C00424C74 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E811FEAE2C9F503F001AF4AB /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				E811FEAF2C9F504D001AF4AB /* String+Ext.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		E811FEB12C9F540A001AF4AB /* Enums */ = {
+			isa = PBXGroup;
+			children = (
+				E811FEB22C9F541C001AF4AB /* ArrowType.swift */,
+				E811FEB42C9F54FE001AF4AB /* SelectedViewOption.swift */,
+			);
+			path = Enums;
+			sourceTree = "<group>";
+		};
 		E8DAE4652C9C09E600BF764D = {
 			isa = PBXGroup;
 			children = (
@@ -68,9 +99,11 @@
 		E8DAE4702C9C09E600BF764D /* StockApp */ = {
 			isa = PBXGroup;
 			children = (
+				E811FEB12C9F540A001AF4AB /* Enums */,
 				E8DAE48A2C9C0B7400BF764D /* Base */,
 				E8DAE48B2C9C0B8200BF764D /* Managers */,
-				E8DAE48D2C9C0BAB00BF764D /* Utils */,
+				E811FEAE2C9F503F001AF4AB /* Extensions */,
+				E8DAE48D2C9C0BAB00BF764D /* Helpers */,
 				E8DAE48C2C9C0B9D00BF764D /* Models */,
 				E8DAE48E2C9C0BE100BF764D /* Modules */,
 				E8DAE47A2C9C09E800BF764D /* Assets.xcassets */,
@@ -92,6 +125,8 @@
 		E8DAE48B2C9C0B8200BF764D /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				E8FE8A002C9EB85A00424C74 /* UserDefaultsManager.swift */,
+				E8FE8A042C9EE65D00424C74 /* NetworkManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -99,21 +134,23 @@
 		E8DAE48C2C9C0B9D00BF764D /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				E8FE8A022C9EE57C00424C74 /* StockModel.swift */,
+				E811FEAC2C9F1E8F001AF4AB /* StockDataModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
 		};
-		E8DAE48D2C9C0BAB00BF764D /* Utils */ = {
+		E8DAE48D2C9C0BAB00BF764D /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			path = Utils;
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		E8DAE48E2C9C0BE100BF764D /* Modules */ = {
 			isa = PBXGroup;
 			children = (
-				E8DAE4A42C9C713F00BF764D /* PopoverViewController */,
+				E8DAE4A42C9C713F00BF764D /* Popover */,
 				E8DAE4A12C9C6A9100BF764D /* Views */,
 				E8DAE4922C9C0C2B00BF764D /* Cell */,
 				E8DAE48F2C9C0C1000BF764D /* Home */,
@@ -142,18 +179,18 @@
 		E8DAE4A12C9C6A9100BF764D /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				E8DAE49D2C9C202B00BF764D /* StateView.swift */,
-				E8DAE49F2C9C33AE00BF764D /* HeaderView.swift */,
+				E8DAE49D2C9C202B00BF764D /* ArrowView.swift */,
+				E8DAE49F2C9C33AE00BF764D /* SelectedView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
 		};
-		E8DAE4A42C9C713F00BF764D /* PopoverViewController */ = {
+		E8DAE4A42C9C713F00BF764D /* Popover */ = {
 			isa = PBXGroup;
 			children = (
 				E8DAE4A52C9C715600BF764D /* PopoverViewController.swift */,
 			);
-			path = PopoverViewController;
+			path = Popover;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -173,7 +210,7 @@
 			);
 			name = StockApp;
 			packageProductDependencies = (
-				E8DAE4992C9C0D2000BF764D /* SnapKit */,
+				E8FE89FE2C9E114C00424C74 /* SnapKit */,
 			);
 			productName = StockApp;
 			productReference = E8DAE46E2C9C09E600BF764D /* StockApp.app */;
@@ -204,7 +241,7 @@
 			);
 			mainGroup = E8DAE4652C9C09E600BF764D;
 			packageReferences = (
-				E8DAE4982C9C0D2000BF764D /* XCRemoteSwiftPackageReference "SnapKit" */,
+				E8FE89FD2C9E114C00424C74 /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
 			productRefGroup = E8DAE46F2C9C09E600BF764D /* Products */;
 			projectDirPath = "";
@@ -232,15 +269,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E811FEB52C9F54FE001AF4AB /* SelectedViewOption.swift in Sources */,
+				E8FE8A052C9EE65D00424C74 /* NetworkManager.swift in Sources */,
 				E8DAE4A62C9C715600BF764D /* PopoverViewController.swift in Sources */,
-				E8DAE49E2C9C202B00BF764D /* StateView.swift in Sources */,
+				E8FE8A032C9EE57C00424C74 /* StockModel.swift in Sources */,
+				E811FEB02C9F504D001AF4AB /* String+Ext.swift in Sources */,
+				E8DAE49E2C9C202B00BF764D /* ArrowView.swift in Sources */,
 				E8DAE4A82C9CBCB600BF764D /* DataTypeTableViewCell.swift in Sources */,
 				E8DAE49C2C9C0E0B00BF764D /* StockTableViewCell.swift in Sources */,
 				E8DAE4762C9C09E600BF764D /* HomeViewController.swift in Sources */,
 				E8DAE4722C9C09E600BF764D /* AppDelegate.swift in Sources */,
+				E811FEB32C9F541C001AF4AB /* ArrowType.swift in Sources */,
+				E8FE8A012C9EB85A00424C74 /* UserDefaultsManager.swift in Sources */,
 				E8DAE4742C9C09E600BF764D /* SceneDelegate.swift in Sources */,
 				E8DAE4912C9C0C2000BF764D /* HomeViewModel.swift in Sources */,
-				E8DAE4A02C9C33AE00BF764D /* HeaderView.swift in Sources */,
+				E8DAE4A02C9C33AE00BF764D /* SelectedView.swift in Sources */,
+				E811FEAD2C9F1E8F001AF4AB /* StockDataModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -384,7 +428,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = LFZX9FGKB4;
+				DEVELOPMENT_TEAM = 29JK24NZ4B;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = StockApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -412,7 +456,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = LFZX9FGKB4;
+				DEVELOPMENT_TEAM = 29JK24NZ4B;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = StockApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -457,7 +501,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		E8DAE4982C9C0D2000BF764D /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+		E8FE89FD2C9E114C00424C74 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
 			requirement = {
@@ -468,9 +512,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E8DAE4992C9C0D2000BF764D /* SnapKit */ = {
+		E8FE89FE2C9E114C00424C74 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = E8DAE4982C9C0D2000BF764D /* XCRemoteSwiftPackageReference "SnapKit" */;
+			package = E8FE89FD2C9E114C00424C74 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
 		};
 /* End XCSwiftPackageProductDependency section */

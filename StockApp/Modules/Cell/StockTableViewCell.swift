@@ -8,8 +8,8 @@
 import UIKit
 import SnapKit
 
+// MARK: - Class Bone
 final class StockTableViewCell: UITableViewCell {
-    
     private lazy var containerView: UIView = {
         let view = UIView()
         view.backgroundColor = .black
@@ -17,10 +17,10 @@ final class StockTableViewCell: UITableViewCell {
         return view
     }()
     
-    private lazy var stateView: StateView = {
-        let view = StateView()
+    private lazy var arrowView: ArrowView = {
+        let view = ArrowView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.setVisibility(state: .down)
+        view.setVisibility(arrow: .stable)
         return view
     }()
     
@@ -29,7 +29,6 @@ final class StockTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
         label.font = UIFont.boldSystemFont(ofSize: 20)
-        label.text = "XU100"
         return label
     }()
     
@@ -38,27 +37,25 @@ final class StockTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 12)
-        label.text = "13:10:12"
         return label
     }()
     
-    
-    private lazy var valueOneLabel: UILabel = {
+    private lazy var valueLabelOne: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
-        label.text = "10,2342"
+        label.textAlignment = .right
         return label
     }()
     
-    private lazy var valueTwoLabel: UILabel = {
+    private lazy var valueLabelTwo: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
-        label.text = "%-0.06"
+        label.textAlignment = .right
         return label
     }()
-    
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureCell()
@@ -80,9 +77,9 @@ extension StockTableViewCell {
             make.left.right.equalToSuperview()
         }
         
-        containerView.addSubview(stateView)
+        containerView.addSubview(arrowView)
         
-        stateView.snp.makeConstraints { make in
+        arrowView.snp.makeConstraints { make in
             make.bottom.equalToSuperview().offset(-4)
             make.top.equalToSuperview().offset(4)
             make.left.equalToSuperview()
@@ -92,8 +89,8 @@ extension StockTableViewCell {
         containerView.addSubview(titleLabel)
         
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(stateView.snp.top).offset(4)
-            make.left.equalTo(stateView.snp.right).offset(8)
+            make.top.equalTo(arrowView.snp.top).offset(4)
+            make.left.equalTo(arrowView.snp.right).offset(8)
             make.height.equalTo(16)
         }
         
@@ -106,46 +103,93 @@ extension StockTableViewCell {
             make.height.equalTo(12)
         }
         
-        containerView.addSubview(valueTwoLabel)
+        containerView.addSubview(valueLabelTwo)
         
-        valueTwoLabel.snp.makeConstraints { make in
+        valueLabelTwo.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.top)
-            make.right.equalToSuperview()
+            make.right.equalToSuperview().offset(-20)
             make.width.equalToSuperview().multipliedBy(0.2)
             make.height.equalTo(titleLabel)
         }
         
-        containerView.addSubview(valueOneLabel)
+        containerView.addSubview(valueLabelOne)
         
-        valueOneLabel.snp.makeConstraints { make in
+        valueLabelOne.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.top)
-            make.right.equalTo(valueTwoLabel.snp.left).offset(-20)
+            make.right.equalTo(valueLabelTwo.snp.left).offset(-32)
             make.width.equalToSuperview().multipliedBy(0.2)
             make.height.equalTo(titleLabel)
         }
     }
 }
 
+// MARK: - Set Cell
+extension StockTableViewCell {
+    public func setTitle(title: String) {
+        titleLabel.text = title
+    }
 
-enum DataType {
-    case last
-    case pDifference
-    case difference
-    case low
-    case high
-    
-    var text: String {
-        switch self {
-        case .last:
-            return "Son"
-        case .pDifference:
-            return "% Fark"
-        case .difference:
-            return "Fark"
-        case .low:
-            return "Düşük"
-        case .high:
-            return "Yüksek"
+    public func setData(model: DataModel) {
+        dateLabel.text = model.clo
+
+        updateValueLabel(valueLabel: valueLabelOne, key: UserDefaultsManager.shared.firstSelectedViewKey, model: model)
+        updateValueLabel(valueLabel: valueLabelTwo, key: UserDefaultsManager.shared.secondSelectedViewKey, model: model)
+    }
+
+    private func updateValueLabel(valueLabel: UILabel, key: String?, model: DataModel) {
+        guard let key else {
+            valueLabel.text = nil
+            valueLabel.textColor = .white
+            return
         }
+
+        valueLabel.text = setValue(key: key, model: model)
+
+        if key == "ddi" || key == "pdd" {
+            valueLabel.textColor = valueLabel.text?.checkNumberSign()
+        } else {
+            valueLabel.textColor = .white
+        }
+    }
+
+    public func setHeighlited(date: String) {
+        containerView.backgroundColor = .gray
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.containerView.backgroundColor = .black
+        }
+    }
+
+    public func setArrow(arrow: ArrowType) {
+        let isLASSelected = UserDefaultsManager.shared.firstSelectedViewKey == "las" || UserDefaultsManager.shared.secondSelectedViewKey == "las"
+        let selectedArrow = isLASSelected ? arrow : .stable
+        arrowView.setVisibility(arrow: selectedArrow)
+    }
+
+
+    public func setValue(key: String, model: DataModel) -> String {
+        if key == "las" {
+            return model.las ?? ""
+        } else if key == "pdd" {
+            return model.pdd ?? ""
+        } else if key == "ddi" {
+            return model.ddi ?? ""
+        } else if key == "low" {
+            return model.low ?? ""
+        } else if key == "hig" {
+            return model.hig ?? ""
+        } else if key == "buy" {
+            return model.buy ?? ""
+        } else if key == "sel" {
+            return model.sel ?? ""
+        } else if key == "pdc" {
+            return model.pdc ?? ""
+        } else if key == "cei" {
+            return model.cei ?? ""
+        } else if key == "flo" {
+            return model.flo ?? ""
+        } else if key == "gco" {
+            return model.gco ?? ""
+        }
+        return ""
     }
 }

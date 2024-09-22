@@ -1,5 +1,5 @@
 //
-//  StateView.swift
+//  ArrowView.swift
 //  StockApp
 //
 //  Created by Mine Rala on 19.09.2024.
@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class StateView: UIView {
+class ArrowView: UIView {
     private lazy var upImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -56,9 +56,9 @@ class StateView: UIView {
         }
     }
     
-    func setVisibility(state: StateMode) {
-        self.backgroundColor = state.viewColor
-        switch state {
+    func setVisibility(arrow: ArrowType) {
+        self.backgroundColor = arrow.viewColor
+        switch arrow {
         case .down:
             upImageView.isHidden = true
             downImageView.isHidden = false
@@ -72,20 +72,3 @@ class StateView: UIView {
         }
 }
 
-
- enum StateMode {
-    case down
-    case up
-    case stable
-    
-    var viewColor: UIColor {
-        switch self {
-        case .up:
-            return .green
-        case .down:
-            return .red
-        case .stable:
-            return .gray
-        }
-    }
-}
