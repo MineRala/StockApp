@@ -132,7 +132,6 @@
 				E8DAE48A2C9C0B7400BF764D /* Base */,
 				E8DAE48B2C9C0B8200BF764D /* Managers */,
 				E811FEAE2C9F503F001AF4AB /* Extensions */,
-				E8DAE48D2C9C0BAB00BF764D /* Helpers */,
 				E811FEB12C9F540A001AF4AB /* Enums */,
 				E8DAE48C2C9C0B9D00BF764D /* Models */,
 				E8DAE48E2C9C0BE100BF764D /* Modules */,
@@ -168,13 +167,6 @@
 				E811FEAC2C9F1E8F001AF4AB /* StockDataModel.swift */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		E8DAE48D2C9C0BAB00BF764D /* Helpers */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Helpers;
 			sourceTree = "<group>";
 		};
 		E8DAE48E2C9C0BE100BF764D /* Modules */ = {
