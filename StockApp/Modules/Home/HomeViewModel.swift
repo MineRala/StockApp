@@ -74,7 +74,6 @@ final class HomeViewModel {
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                     self.uiChangedRows(previousData: previousData, currentData: newData)
-
                 }
             case .failure(let error):
                 print(error)
