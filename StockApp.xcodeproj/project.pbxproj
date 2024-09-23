@@ -173,7 +173,7 @@
 			isa = PBXGroup;
 			children = (
 				E8DAE4A12C9C6A9100BF764D /* Views */,
-				E8DAE4922C9C0C2B00BF764D /* Cell */,
+				E8DAE4922C9C0C2B00BF764D /* Cells */,
 				E8DAE4A42C9C713F00BF764D /* Popover */,
 				E8DAE48F2C9C0C1000BF764D /* Home */,
 			);
@@ -189,13 +189,13 @@
 			path = Home;
 			sourceTree = "<group>";
 		};
-		E8DAE4922C9C0C2B00BF764D /* Cell */ = {
+		E8DAE4922C9C0C2B00BF764D /* Cells */ = {
 			isa = PBXGroup;
 			children = (
 				E80AA4932CA0A63E00C83EF3 /* StockView */,
 				E80AA4942CA0A64C00C83EF3 /* DataTypeView */,
 			);
-			path = Cell;
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		E8DAE4A12C9C6A9100BF764D /* Views */ = {
