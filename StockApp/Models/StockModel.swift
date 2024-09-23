@@ -17,7 +17,6 @@ struct StockModel: Codable {
     }
 }
 
-
 struct MyPageDefaults: Codable {
     var cod: String
     var gro: String

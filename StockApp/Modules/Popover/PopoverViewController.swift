@@ -8,11 +8,15 @@
 import Foundation
 import UIKit
 
+protocol PopoverViewInterface: AnyObject {}
+
+// MARK: - Class Bone
 final class PopoverViewController: UIViewController {
+    // MARK:  Attributes
     private lazy var containerView: UIView = {
         let view = UIView()
         view.backgroundColor = .lightGray
-        view.layer.cornerRadius = 8
+        view.layer.cornerRadius = 4
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -36,28 +40,40 @@ final class PopoverViewController: UIViewController {
         tableView.register(DataTypeTableViewCell.self, forCellReuseIdentifier: "DataTypeTableViewCell")
         return tableView
     }()
-
-    var myPage: [MyPage]
-    var selectedViewOption: SelectedViewOption?
-
+    
+    // MARK: Properties
+    private let myPage: [MyPage]
+    private lazy var viewModel: PopoverViewModelInterface = {
+        return PopoverViewModel(view: self, myPage: myPage)
+    }()
+    
+    // MARK: Cons & Decons
     init(myPage: [MyPage]) {
-        self.myPage = myPage
-        super.init(nibName: nil, bundle: nil)
+        self.myPage = myPage // Önce myPage'i başlat
+        super.init(nibName: nil, bundle: nil) // Sonra süper init çağrısı
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
     }
+    
+    func setOption(option: SelectedViewOption) {
+        viewModel.setSelectedViewOption(option: option)
+    }
+}
 
+// MARK: - Setup UI
+extension PopoverViewController {
     private func setupUI() {
-        preferredContentSize = CGSize(width: 220, height: (myPage.count * 35) + 40)
+        preferredContentSize = CGSize(width: 220, height: (viewModel.numberOfRowsInSection * 35) + 40)
         view.backgroundColor = .white
-
+        
         view.addSubview(containerView)
         
         containerView.snp.makeConstraints { make in
@@ -72,7 +88,7 @@ final class PopoverViewController: UIViewController {
         titleLabel.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
         }
-
+        
         view.addSubview(tableView)
         
         tableView.snp.makeConstraints { make in
@@ -87,13 +103,12 @@ final class PopoverViewController: UIViewController {
 //MARK: - TableView DataSource
 extension PopoverViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //        viewModel.numberOfRowsInSection
-        myPage.count
+        viewModel.numberOfRowsInSection
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "DataTypeTableViewCell",for: indexPath) as? DataTypeTableViewCell, let selectedViewOption else { return UITableViewCell() }
-        cell.setCell(dataType: myPage[indexPath.row].name, selectedViewOption: selectedViewOption)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "DataTypeTableViewCell",for: indexPath) as? DataTypeTableViewCell, let option = viewModel.getSelectedViewOption() else { return UITableViewCell() }
+        cell.setCell(dataType: viewModel.getDataName(index: indexPath.row), selectedViewOption: option)
         cell.selectionStyle = .none
         return cell
     }
@@ -102,26 +117,15 @@ extension PopoverViewController: UITableViewDataSource {
 //MARK: - TableView Delegate
 extension PopoverViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let selectedViewOption else { return }
         tableView.deselectRow(at: indexPath, animated: true)
-        //        viewModel.didSelectRowAt(index: indexPath.row)
-        if indexPath.row < myPage.count {
-            let selectedKey = myPage[indexPath.row].key
-            let selectedName = myPage[indexPath.row].name
-
-            switch selectedViewOption {
-            case .first:
-                UserDefaultsManager.shared.setValue(value1: selectedKey, value2: selectedName, forKey: "firstSelectedView")
-            case .second:
-                UserDefaultsManager.shared.setValue(value1: selectedKey, value2: selectedName, forKey: "secondSelectedView")
-            }
-        }
-
+        viewModel.didSelectRowAt(index: indexPath.row)
         dismiss(animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        //        viewModel.heightForRowAt
-        35
+        CGFloat(viewModel.heightForRowAt)
     }
 }
+
+// MARK: - PopoverViewInterface
+extension PopoverViewController: PopoverViewInterface {}

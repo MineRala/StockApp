@@ -7,49 +7,40 @@
 
 import Foundation
 
-class NetworkManager {
+protocol NetworkManagerProtocol {
+    func makeRequest<T: Decodable>(endpoint: Endpoint, type: T.Type, completed: @escaping (Result<T, SAError>) -> Void)
+}
 
-    static let shared = NetworkManager() // Singleton
-    private init() {} // Tekil nesne için initializer'ı gizle
-    func fetchData<T: Decodable>(from urlString: String, completion: @escaping (Result<T, Error>) -> Void) {
-        guard let url = URL(string: urlString) else {
-            completion(.failure(NSError(domain: "Geçersiz URL", code: 0, userInfo: nil)))
+// MARK: - Class Bone
+final class NetworkManager: NetworkManagerProtocol {
+    //Applied Singleton
+    static let shared = NetworkManager()
+
+    func makeRequest<T: Decodable>(endpoint: Endpoint, type: T.Type, completed: @escaping (Result<T, SAError>) -> Void) {
+        guard let url = endpoint.url else {
+            completed(.failure(.invalidKeyword))
             return
         }
-
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            // Hata kontrolü
-            if let error = error {
-                completion(.failure(error))
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let _ = error {
+                completed(.failure(.unableToComplete))
                 return
             }
-
-            // Yanıt kontrolü
-            guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
-                let statusCodeError = NSError(domain: "Geçersiz yanıt", code: 1, userInfo: nil)
-                completion(.failure(statusCodeError))
+            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+                completed(.failure(.invalidResponse))
                 return
             }
-
-            // Veri kontrolü
             guard let data = data else {
-                completion(.failure(NSError(domain: "Veri alınamadı", code: 2, userInfo: nil)))
+                completed(.failure(.invalidData))
                 return
             }
-
-            // Veriyi işleme
             do {
                 let decoder = JSONDecoder()
-                let model = try decoder.decode(T.self, from: data) // Generic model kullanımı
-                completion(.success(model))
+                let decodedObject = try decoder.decode(T.self, from: data)
+                completed(.success(decodedObject))
             } catch {
-                completion(.failure(error))
+                completed(.failure(.invalidData))
             }
-        }
-
-        task.resume() // Görevi başlat
+        }.resume()
     }
-
-  
-
 }

@@ -8,7 +8,16 @@
 import UIKit
 import SnapKit
 
-final class HomeViewController: UIViewController, CustomViewDelegate {
+protocol HomeViewInterface: AnyObject {
+    func setupUI()
+    func setSelectedViewText()
+    func tableViewReload()
+    func updateCell(index: Int, current: DataModel, previous: DataModel)
+}
+
+//MARK: - Class Bone
+final class HomeViewController: UIViewController {
+    // MARK:  Attributes
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Sembol"
@@ -21,7 +30,6 @@ final class HomeViewController: UIViewController, CustomViewDelegate {
     private lazy var selectedViewFirst: SelectedView = {
         let view = SelectedView()
         view.tag = 101
-//        view.setText(text: UserDefaultsManager.shared.getValue(forKey: "firstSelectedView").1 ?? "")
         view.delegate = self
         return view
     }()
@@ -29,7 +37,6 @@ final class HomeViewController: UIViewController, CustomViewDelegate {
     private lazy var selectedViewSecond: SelectedView = {
         let view = SelectedView()
         view.tag = 102
-//        view.setText(text: UserDefaultsManager.shared.getValue(forKey: "secondSelectedView").1 ?? "")
         view.delegate = self
         return view
     }()
@@ -76,159 +83,87 @@ final class HomeViewController: UIViewController, CustomViewDelegate {
         return tableView
     }()
 
-    var myPageDefaults: [MyPageDefaults]?
-    var myPage: [MyPage]?
-    var stockData: [DataModel]?
-    var timer: Timer?
-    var previousDataForHeighlity: [DataModel] = []
-    var previousDataForArrow: [DataModel] = []
+    // MARK: Properties
+    private lazy var viewModel: HomeViewModelInterface = HomeViewModel(view: self)
 
+    // MARK: Cons & Decons
+    deinit {
+        viewModel.deinitt()
+    }
 
+    // MARK: Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
-        fetchData()
-        startTimer()
-        observeUserDefaultsChanges()
+        viewModel.viewDidLoad()
+    }
+}
 
+//MARK: - TableView DataSource
+extension HomeViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        viewModel.numberOfRowsInSection
     }
 
-    func startTimer() {
-           timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(fetchData), userInfo: nil, repeats: true)
-       }
-
-    deinit {
-        timer?.invalidate()
-        NotificationCenter.default.removeObserver(self)
-    }
-
-
-    private func observeUserDefaultsChanges() {
-        NotificationCenter.default.addObserver(self, selector: #selector(userDefaultsDidChange(_:)), name: .userDefaultsDidChange, object: nil)
-    }
-    @objc private func userDefaultsDidChange(_ notification: Notification) {
-        fetchSelectedStockData()
-
-    }
-
-    private func configureSelectedViewTitles() {
-        if UserDefaultsManager.shared.isInitialUserDefaultsEmpty(), let myPage {
-            UserDefaultsManager.shared.setDefaultValues(
-                firstSelectedViewKey: myPage[0].key,
-                firstSelectedViewName: myPage[0].name,
-                secondSelectedViewKey: myPage[1].key,
-                secondSelectedViewName :myPage[1].name
-            )
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "StockTableViewCell",for: indexPath) as? StockTableViewCell else {
+            return UITableViewCell()
         }
-        DispatchQueue.main.async {
-            self.selectedViewFirst.setText(text: UserDefaultsManager.shared.firstSelectedViewName ?? "")
-            self.selectedViewSecond.setText(text:  UserDefaultsManager.shared.secondSelectedViewName ?? "")
+        cell.setTitle(title: viewModel.getCod(index: indexPath.row))
+        if let model = viewModel.getStockData(index: indexPath.row) {
+            cell.setData(model: model)
         }
+        cell.selectionStyle = .none
+        cell.backgroundColor = .black
+        return cell
+    }
+}
 
-
+//MARK: - TableView Delegate
+extension HomeViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 
-    @objc func fetchData() {
-        NetworkManager.shared.fetchData(from: "https://sui7963dq6.execute-api.eu-central-1.amazonaws.com/default/ForeksMobileInterviewSettings") { (result: Result<StockModel, Error>) in
-            switch result {
-            case .success(let stockModel):
-                print("Başarıyla alındı: \(stockModel)")
-                self.myPageDefaults = stockModel.myPageDefaults
-                self.myPage = stockModel.myPage
-                self.configureSelectedViewTitles()
-                self.fetchSelectedStockData()
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            case .failure(let error):
-                print("Hata: \(error.localizedDescription)")
-            }
-        }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        CGFloat(viewModel.heightForRowAt)
     }
+}
 
-    func highlightChangedRows() {
-        guard let currentData = stockData else { return }
+//MARK: - UIPopoverPresentationControllerDelegate
+extension HomeViewController: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none // iPhone'da popover olarak göstermek için
+    }
+}
 
-        for (index, current) in currentData.enumerated() {
-            if index < previousDataForHeighlity.count {
-                let previous = previousDataForHeighlity[index]
+// MARK: - SelectedViewDelegate
+extension HomeViewController: SelectedViewDelegate {
+    func selectedViewDidTap(_ selectedView: SelectedView) {
+        let popoverVC = PopoverViewController(myPage: viewModel.getMyPage())
+        popoverVC.modalPresentationStyle = .popover
 
-                // "clo" alanını karşılaştır
-                if current.clo != previous.clo {
-                    // Değişiklik varsa, ilgili hücreyi vurgula
-                    if let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? StockTableViewCell {
-                        cell.setHeighlited(date: current.clo) // Vurgulama fonksiyonunu çağır
-                    }
-                }
-            }
+        if let popoverPresentationController = popoverVC.popoverPresentationController {
+            popoverPresentationController.sourceView = selectedView
+            popoverPresentationController.sourceRect = selectedView.bounds
+            popoverPresentationController.permittedArrowDirections = .up
+            popoverPresentationController.delegate = self
         }
 
-        // Yeni verileri sakla
-        previousDataForHeighlity = currentData
-    }
+        present(popoverVC, animated: true, completion: nil)
 
-
-    func lastPriceArrowUpdates() {
-        guard let currentData = stockData else { return }
-
-        // currentData'nın uzunluğuna göre işlem yap
-        for (index, current) in currentData.enumerated() {
-            // previousDataForArrow dizisinin uzunluğuna göre sınırlandırma
-            if index < previousDataForArrow.count {
-                let previous = previousDataForArrow[index]
-
-                // Hücreyi bul ve arrow yönünü belirle
-                if let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? StockTableViewCell {
-                    let currentPrice = current.las?.toFloat() ?? 0.0
-                    let previousPrice = previous.las?.toFloat() ?? 0.0
-
-                    if currentPrice < previousPrice {
-                        cell.setArrow(arrow: .down)
-                    } else if currentPrice > previousPrice {
-                        cell.setArrow(arrow: .up)
-                    } else {
-                        cell.setArrow(arrow: .stable)
-                    }
-                }
-            }
-        }
-
-        // Yeni verileri sakla
-        previousDataForArrow = currentData
-    }
-
-    func generateSTCSString() -> String {
-        guard let myPageDefaults else { return ""}
-        var resultString = ""
-
-        for (index, element) in myPageDefaults.enumerated() {
-            resultString += element.tke
-            if index < myPageDefaults.count - 1 {
-                resultString += "~"
-            }
-        }
-        return resultString
-    }
-
-    func fetchSelectedStockData() {
-        guard let first = UserDefaultsManager.shared.firstSelectedViewKey, let second = UserDefaultsManager.shared.secondSelectedViewKey else { return }
-
-        NetworkManager.shared.fetchData(from: "https://sui7963dq6.execute-api.eu-central-1.amazonaws.com/default/ForeksMobileInterview?fields=\(first),\(second )&stcs=\(generateSTCSString())") { (result: Result<StockDataModel, Error>) in
-            switch result {
-            case .success(let stockDataModel):
-                print("Başarıyla alındı: \(stockDataModel)")
-                self.stockData = stockDataModel.dataModel
-                DispatchQueue.main.async {
-                    self.highlightChangedRows()
-                    self.lastPriceArrowUpdates()
-                    self.tableView.reloadData()
-                }
-            case .failure(let error):
-                print("Hata: \(error.localizedDescription)")
-            }
+        switch selectedView.tag {
+        case 101:
+            popoverVC.setOption(option: .first)
+        case 102:
+            popoverVC.setOption(option: .second)
+        default:
+            break
         }
     }
+}
 
+// MARK: - HomeViewInterface
+extension HomeViewController: HomeViewInterface {
     func setupUI() {
         self.view.backgroundColor = .black
 
@@ -249,67 +184,26 @@ final class HomeViewController: UIViewController, CustomViewDelegate {
         }
     }
 
-    func customViewDidTap(_ customView: SelectedView) {
-        guard let myPage else { return }
-        let popoverVC = PopoverViewController(myPage: myPage)
-        popoverVC.modalPresentationStyle = .popover
-
-        if let popoverPresentationController = popoverVC.popoverPresentationController {
-            popoverPresentationController.sourceView = customView
-            popoverPresentationController.sourceRect = customView.bounds
-            popoverPresentationController.permittedArrowDirections = .up
-            popoverPresentationController.delegate = self
-        }
-
-        present(popoverVC, animated: true, completion: nil)
-
-        // Hangi CustomView'ın tıklandığını kontrol etme
-        if customView == selectedViewFirst {
-            popoverVC.selectedViewOption = .first
-        } else if customView == selectedViewSecond {
-            popoverVC.selectedViewOption = .second
+    func setSelectedViewText() {
+        DispatchQueue.main.async {
+            self.selectedViewFirst.setText(text: UserDefaultsManager.shared.firstSelectedViewName ?? "")
+            self.selectedViewSecond.setText(text: UserDefaultsManager.shared.secondSelectedViewName ?? "")
         }
     }
-}
 
-//MARK: - TableView DataSource
-extension HomeViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //        viewModel.numberOfRowsInSection
-        myPageDefaults?.count ?? 10
+    func tableViewReload() {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "StockTableViewCell",for: indexPath) as? StockTableViewCell else {
-            return UITableViewCell()
-        }
-        if let stockModel = myPageDefaults?[indexPath.row] {
-            cell.setTitle(title: stockModel.cod)
-        }
-        if let stockDataModel = stockData?[indexPath.row] {
-            cell.setData(model: stockDataModel)
+    func updateCell(index: Int, current: DataModel, previous: DataModel) {
+        guard let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? StockTableViewCell  else { return }
+        if viewModel.isCloValueDifferent(current: current, previous: previous) {
+            cell.setHeighlited()
         }
 
-        cell.selectionStyle = .none
-        cell.backgroundColor = .black
-        return cell
-    }
-}
-
-//MARK: - TableView Delegate
-extension HomeViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-    }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        //        viewModel.heightForRowAt
-        60
-    }
-}
-
-extension HomeViewController: UIPopoverPresentationControllerDelegate {
-    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-        return .none // iPhone'da popover olarak göstermek için
+        let newArrowType = viewModel.setArrowType(current: current, previous: previous)
+        cell.setArrow(arrow: viewModel.checkArrowStable(type: newArrowType))
     }
 }

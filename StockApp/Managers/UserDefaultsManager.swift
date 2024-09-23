@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK: - Class Bone
 final class UserDefaultsManager {
     
     static let shared = UserDefaultsManager()
@@ -29,7 +30,11 @@ final class UserDefaultsManager {
     var secondSelectedViewName: String? {
         return getValue(forKey: "secondSelectedView").1
     }
-    
+
+    var isLASKeySelected: Bool {
+        return  UserDefaultsManager.shared.firstSelectedViewKey == "las" || UserDefaultsManager.shared.secondSelectedViewKey == "las"
+    }
+
     func getValue(forKey key: String) -> (String?, String?) {
         if let tupleArray = defaults.array(forKey: key) as? [String], tupleArray.count == 2 {
             return (tupleArray[0], tupleArray[1])
@@ -37,8 +42,8 @@ final class UserDefaultsManager {
         return (nil, nil)
     }
     
-    func setValue(value1: String, value2: String, forKey key: String) {
-        let tupleArray = [value1, value2]
+    func setValue(valueKey: String, valueName: String, forKey key: String) {
+        let tupleArray = [valueKey, valueName]
         defaults.set(tupleArray, forKey: key)
         
         NotificationCenter.default.post(name: .userDefaultsDidChange, object: nil, userInfo: [key: tupleArray])
@@ -50,18 +55,17 @@ final class UserDefaultsManager {
         let secondTuple = [secondSelectedViewKey, secondSelectedViewName]
         defaults.set(firstTuple, forKey: "firstSelectedView")
         defaults.set(secondTuple, forKey: "secondSelectedView")
+
         NotificationCenter.default.post(name: .userDefaultsDidChange, object: nil, userInfo: ["firstSelectedView": firstTuple, "secondSelectedView": secondTuple])
         UserDefaults.standard.synchronize()
     }
     
     func isInitialUserDefaultsEmpty() -> Bool {
-        let firstTupleExists = defaults.array(forKey: "firstSelectedView") != nil
-        let secondTupleExists = defaults.array(forKey: "secondSelectedView") != nil
-        
-        return !firstTupleExists && !secondTupleExists
+        return defaults.array(forKey: "firstSelectedView") == nil && defaults.array(forKey: "secondSelectedView") == nil
     }
 }
 
+// MARK: - Notification Name
 extension Notification.Name {
     static let userDefaultsDidChange = Notification.Name("userDefaultsDidChange")
 }

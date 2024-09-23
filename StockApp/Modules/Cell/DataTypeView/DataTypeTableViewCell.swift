@@ -8,8 +8,11 @@
 import UIKit
 import SnapKit
 
+protocol DataTypeTableViewCellInterface: AnyObject {}
+
 //MARK: - Class Bone
 final class DataTypeTableViewCell: UITableViewCell {
+    // MARK:  Attributes
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -29,9 +32,13 @@ final class DataTypeTableViewCell: UITableViewCell {
         return imageView
     }()
     
+    // MARK: Properties
+    private lazy var viewModel: DataTypeTableViewCellViewModelInterface = DataTypeTableViewCellViewModel(view: self)
+    
+    // MARK: Cons & Decons
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        configureCell()
+        setupCell()
     }
     
     required init?(coder: NSCoder) {
@@ -39,11 +46,9 @@ final class DataTypeTableViewCell: UITableViewCell {
     }
 }
 
-
-
-//MARK: - Configure Cell
+//MARK: - Setup UI
 extension DataTypeTableViewCell {
-    private func configureCell() {
+    private func setupCell() {
         contentView.addSubview(titleLabel)
         
         titleLabel.snp.makeConstraints { make in
@@ -66,14 +71,9 @@ extension DataTypeTableViewCell {
 extension DataTypeTableViewCell {
     func setCell(dataType: String, selectedViewOption: SelectedViewOption) {
         titleLabel.text = dataType
-        let retrievedValue: String?
-
-        switch selectedViewOption {
-        case .first:
-            retrievedValue = UserDefaultsManager.shared.firstSelectedViewName
-        case .second:
-            retrievedValue = UserDefaultsManager.shared.secondSelectedViewName
-        }
-        checkmarkImageView.isHidden = !(retrievedValue == dataType)
+        checkmarkImageView.isHidden = viewModel.isCheckmarkIconVisible(dataType: dataType, selectedViewOption: selectedViewOption)
     }
 }
+
+// MARK: - DataTypeTableViewCellInterface
+extension DataTypeTableViewCell: DataTypeTableViewCellInterface {}

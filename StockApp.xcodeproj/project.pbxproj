@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E80AA48B2CA01F1400C83EF3 /* Enpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = E80AA48A2CA01F1400C83EF3 /* Enpoint.swift */; };
+		E80AA48E2CA0202000C83EF3 /* ErrorMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E80AA48D2CA0202000C83EF3 /* ErrorMessage.swift */; };
+		E80AA4902CA0852800C83EF3 /* PopoverViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E80AA48F2CA0852800C83EF3 /* PopoverViewModel.swift */; };
+		E80AA4922CA09B3E00C83EF3 /* StockTableViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E80AA4912CA09B3E00C83EF3 /* StockTableViewCellViewModel.swift */; };
+		E80AA4962CA0AA6200C83EF3 /* DataTypeTableViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E80AA4952CA0AA6200C83EF3 /* DataTypeTableViewCellViewModel.swift */; };
 		E811FEAD2C9F1E8F001AF4AB /* StockDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E811FEAC2C9F1E8F001AF4AB /* StockDataModel.swift */; };
 		E811FEB02C9F504D001AF4AB /* String+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E811FEAF2C9F504D001AF4AB /* String+Ext.swift */; };
 		E811FEB32C9F541C001AF4AB /* ArrowType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E811FEB22C9F541C001AF4AB /* ArrowType.swift */; };
@@ -29,6 +34,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E80AA48A2CA01F1400C83EF3 /* Enpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enpoint.swift; sourceTree = "<group>"; };
+		E80AA48D2CA0202000C83EF3 /* ErrorMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorMessage.swift; sourceTree = "<group>"; };
+		E80AA48F2CA0852800C83EF3 /* PopoverViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverViewModel.swift; sourceTree = "<group>"; };
+		E80AA4912CA09B3E00C83EF3 /* StockTableViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTableViewCellViewModel.swift; sourceTree = "<group>"; };
+		E80AA4952CA0AA6200C83EF3 /* DataTypeTableViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTypeTableViewCellViewModel.swift; sourceTree = "<group>"; };
 		E811FEAC2C9F1E8F001AF4AB /* StockDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDataModel.swift; sourceTree = "<group>"; };
 		E811FEAF2C9F504D001AF4AB /* String+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Ext.swift"; sourceTree = "<group>"; };
 		E811FEB22C9F541C001AF4AB /* ArrowType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrowType.swift; sourceTree = "<group>"; };
@@ -63,6 +73,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E80AA4932CA0A63E00C83EF3 /* StockView */ = {
+			isa = PBXGroup;
+			children = (
+				E8DAE49B2C9C0E0B00BF764D /* StockTableViewCell.swift */,
+				E80AA4912CA09B3E00C83EF3 /* StockTableViewCellViewModel.swift */,
+			);
+			path = StockView;
+			sourceTree = "<group>";
+		};
+		E80AA4942CA0A64C00C83EF3 /* DataTypeView */ = {
+			isa = PBXGroup;
+			children = (
+				E8DAE4A72C9CBCB600BF764D /* DataTypeTableViewCell.swift */,
+				E80AA4952CA0AA6200C83EF3 /* DataTypeTableViewCellViewModel.swift */,
+			);
+			path = DataTypeView;
+			sourceTree = "<group>";
+		};
 		E811FEAE2C9F503F001AF4AB /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -76,6 +104,8 @@
 			children = (
 				E811FEB22C9F541C001AF4AB /* ArrowType.swift */,
 				E811FEB42C9F54FE001AF4AB /* SelectedViewOption.swift */,
+				E80AA48A2CA01F1400C83EF3 /* Enpoint.swift */,
+				E80AA48D2CA0202000C83EF3 /* ErrorMessage.swift */,
 			);
 			path = Enums;
 			sourceTree = "<group>";
@@ -99,11 +129,11 @@
 		E8DAE4702C9C09E600BF764D /* StockApp */ = {
 			isa = PBXGroup;
 			children = (
-				E811FEB12C9F540A001AF4AB /* Enums */,
 				E8DAE48A2C9C0B7400BF764D /* Base */,
 				E8DAE48B2C9C0B8200BF764D /* Managers */,
 				E811FEAE2C9F503F001AF4AB /* Extensions */,
 				E8DAE48D2C9C0BAB00BF764D /* Helpers */,
+				E811FEB12C9F540A001AF4AB /* Enums */,
 				E8DAE48C2C9C0B9D00BF764D /* Models */,
 				E8DAE48E2C9C0BE100BF764D /* Modules */,
 				E8DAE47A2C9C09E800BF764D /* Assets.xcassets */,
@@ -150,9 +180,9 @@
 		E8DAE48E2C9C0BE100BF764D /* Modules */ = {
 			isa = PBXGroup;
 			children = (
-				E8DAE4A42C9C713F00BF764D /* Popover */,
 				E8DAE4A12C9C6A9100BF764D /* Views */,
 				E8DAE4922C9C0C2B00BF764D /* Cell */,
+				E8DAE4A42C9C713F00BF764D /* Popover */,
 				E8DAE48F2C9C0C1000BF764D /* Home */,
 			);
 			path = Modules;
@@ -170,8 +200,8 @@
 		E8DAE4922C9C0C2B00BF764D /* Cell */ = {
 			isa = PBXGroup;
 			children = (
-				E8DAE49B2C9C0E0B00BF764D /* StockTableViewCell.swift */,
-				E8DAE4A72C9CBCB600BF764D /* DataTypeTableViewCell.swift */,
+				E80AA4932CA0A63E00C83EF3 /* StockView */,
+				E80AA4942CA0A64C00C83EF3 /* DataTypeView */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -189,6 +219,7 @@
 			isa = PBXGroup;
 			children = (
 				E8DAE4A52C9C715600BF764D /* PopoverViewController.swift */,
+				E80AA48F2CA0852800C83EF3 /* PopoverViewModel.swift */,
 			);
 			path = Popover;
 			sourceTree = "<group>";
@@ -270,18 +301,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				E811FEB52C9F54FE001AF4AB /* SelectedViewOption.swift in Sources */,
+				E80AA4922CA09B3E00C83EF3 /* StockTableViewCellViewModel.swift in Sources */,
 				E8FE8A052C9EE65D00424C74 /* NetworkManager.swift in Sources */,
 				E8DAE4A62C9C715600BF764D /* PopoverViewController.swift in Sources */,
 				E8FE8A032C9EE57C00424C74 /* StockModel.swift in Sources */,
+				E80AA48B2CA01F1400C83EF3 /* Enpoint.swift in Sources */,
 				E811FEB02C9F504D001AF4AB /* String+Ext.swift in Sources */,
 				E8DAE49E2C9C202B00BF764D /* ArrowView.swift in Sources */,
 				E8DAE4A82C9CBCB600BF764D /* DataTypeTableViewCell.swift in Sources */,
 				E8DAE49C2C9C0E0B00BF764D /* StockTableViewCell.swift in Sources */,
+				E80AA4902CA0852800C83EF3 /* PopoverViewModel.swift in Sources */,
 				E8DAE4762C9C09E600BF764D /* HomeViewController.swift in Sources */,
 				E8DAE4722C9C09E600BF764D /* AppDelegate.swift in Sources */,
 				E811FEB32C9F541C001AF4AB /* ArrowType.swift in Sources */,
 				E8FE8A012C9EB85A00424C74 /* UserDefaultsManager.swift in Sources */,
 				E8DAE4742C9C09E600BF764D /* SceneDelegate.swift in Sources */,
+				E80AA4962CA0AA6200C83EF3 /* DataTypeTableViewCellViewModel.swift in Sources */,
+				E80AA48E2CA0202000C83EF3 /* ErrorMessage.swift in Sources */,
 				E8DAE4912C9C0C2000BF764D /* HomeViewModel.swift in Sources */,
 				E8DAE4A02C9C33AE00BF764D /* SelectedView.swift in Sources */,
 				E811FEAD2C9F1E8F001AF4AB /* StockDataModel.swift in Sources */,

@@ -8,7 +8,13 @@
 import UIKit
 import SnapKit
 
-class SelectedView: UIView {
+protocol SelectedViewDelegate: AnyObject {
+    func selectedViewDidTap(_ selectedView: SelectedView)
+}
+
+// MARK: - Class Bone
+final class SelectedView: UIView {
+    // MARK:  Attributes
     private lazy var textLabel: UILabel = {
         let textLabel = UILabel()
         textLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -26,8 +32,10 @@ class SelectedView: UIView {
         return downImageView
     }()
 
-    public weak var delegate: CustomViewDelegate?
+    // MARK:  Properties
+    public weak var delegate: SelectedViewDelegate?
 
+    // MARK: Cons & Decons
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
@@ -40,6 +48,13 @@ class SelectedView: UIView {
         observeUserDefaultsChanges()
     }
 
+    private func observeUserDefaultsChanges() {
+        NotificationCenter.default.addObserver(self, selector: #selector(userDefaultsDidChange(_:)), name: .userDefaultsDidChange, object: nil)
+    }
+}
+
+// MARK - Setup UI
+extension SelectedView {
     private func setupView() {
         self.backgroundColor = .black
         self.layer.borderColor = UIColor.gray.cgColor
@@ -64,13 +79,21 @@ class SelectedView: UIView {
             make.height.equalTo(24)
         }
     }
+}
 
-    @objc private func showPopover() {
-        delegate?.customViewDidTap(self)
+// MARK: - Set View
+extension SelectedView {
+    func setText(text: String) {
+        DispatchQueue.main.async {
+            self.textLabel.text = text
+        }
     }
+}
 
-    private func observeUserDefaultsChanges() {
-        NotificationCenter.default.addObserver(self, selector: #selector(userDefaultsDidChange(_:)), name: .userDefaultsDidChange, object: nil)
+// MARK: - Actions
+extension SelectedView {
+    @objc private func showPopover() {
+        delegate?.selectedViewDidTap(self)
     }
 
     @objc private func userDefaultsDidChange(_ notification: Notification) {
@@ -90,14 +113,4 @@ class SelectedView: UIView {
             }
         }
     }
-
-    func setText(text: String) {
-        DispatchQueue.main.async {
-            self.textLabel.text = text
-        }
-    }
-}
-
-protocol CustomViewDelegate: AnyObject {
-    func customViewDidTap(_ customView: SelectedView)
 }

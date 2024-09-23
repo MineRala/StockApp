@@ -9,9 +9,13 @@ import UIKit
 
 extension String {
     func toFloat() -> Float? {
-        return Float(self.trimmingCharacters(in: .whitespacesAndNewlines))
+        let normalizedString = self
+            .replacingOccurrences(of: ".", with: "")
+            .replacingOccurrences(of: ",", with: ".")
+
+        return Float(normalizedString.trimmingCharacters(in: .whitespacesAndNewlines))
     }
-    
+
     func checkNumberSign() -> UIColor {
         let trimmedString = self.trimmingCharacters(in: .whitespacesAndNewlines)
         if trimmedString.hasPrefix("-") {
@@ -19,18 +23,4 @@ extension String {
         }
         return .green
     }
-
-    func getSTCS(myPageDefaults: [MyPageDefaults]?) -> String {
-        guard let myPageDefaults else { return ""}
-        var resultString = ""
-
-        for (index, element) in myPageDefaults.enumerated() {
-            resultString += element.tke
-            if index < myPageDefaults.count - 1 {
-                resultString += "~"
-            }
-        }
-        return resultString
-    }
-
 }
