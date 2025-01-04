@@ -203,7 +203,9 @@ extension HomeViewController: HomeViewInterface {
             cell.setHeighlited()
         }
 
-        let newArrowType = viewModel.setArrowType(current: current, previous: previous)
-        cell.setArrow(arrow: viewModel.checkArrowStable(type: newArrowType))
+        if let currentLasValue = current.las?.toFloat(), let previousLasValue = previous.las?.toFloat(), viewModel.isLasValueDifferent(currentLasValue: currentLasValue, previousLasValue: previousLasValue) {
+            let newArrowType = viewModel.setArrowType(current: currentLasValue, previous: previousLasValue)
+            cell.setArrow(arrow: newArrowType)
+        }
     }
 }

@@ -17,8 +17,9 @@ protocol HomeViewModelInterface: AnyObject {
     func getStockData(index: Int) -> DataModel?
     func getMyPage() -> [MyPage]
     func isCloValueDifferent(current: DataModel, previous: DataModel) -> Bool
-    func setArrowType(current: DataModel, previous: DataModel) -> ArrowType
-    func checkArrowStable(type: ArrowType) -> ArrowType
+    func isLasValueDifferent(currentLasValue: Float, previousLasValue: Float) -> Bool
+    func setArrowType(current: Float, previous: Float) -> ArrowType
+//    func checkArrowStable(type: ArrowType) -> ArrowType
 }
 
 // MARK: - Class Bone
@@ -33,7 +34,7 @@ final class HomeViewModel {
     private let storeManager: NetworkManagerProtocol
     private var timer: Timer?
 
-    var currentArrowType: ArrowType = .stable
+//    var currentArrowType: ArrowType = .stable
     init(view: HomeViewInterface, storeManager: NetworkManagerProtocol = NetworkManager.shared) {
         self.view = view
         self.storeManager = storeManager
@@ -101,9 +102,9 @@ final class HomeViewModel {
     func configureSelectedViewTitles() {
         if UserDefaultsManager.shared.isInitialUserDefaultsEmpty() {
             UserDefaultsManager.shared.setDefaultValues(
-                firstSelectedViewKey: myPage[0].key,
+                firstSelectedViewKey: myPage[0].key.rawValue,
                 firstSelectedViewName: myPage[0].name,
-                secondSelectedViewKey: myPage[1].key,
+                secondSelectedViewKey: myPage[1].key.rawValue,
                 secondSelectedViewName :myPage[1].name
             )
         }
@@ -177,24 +178,26 @@ extension HomeViewModel: HomeViewModelInterface {
         current.clo != previous.clo
     }
 
-    func setArrowType(current: DataModel, previous: DataModel) -> ArrowType {
-        if UserDefaultsManager.shared.isLASKeySelected {
-            if let currentLasValue = current.las?.toFloat(), let previousLasValue = previous.las?.toFloat() {
-                if currentLasValue > previousLasValue {
-                    return .up
-                }
-                if currentLasValue < previousLasValue {
-                    return .down
-                }
-            }
-        }
-        return currentArrowType
+    func isLasValueDifferent(currentLasValue: Float, previousLasValue: Float) -> Bool {
+        currentLasValue != previousLasValue
     }
 
-    func checkArrowStable(type: ArrowType) -> ArrowType {
-        if type != .stable {
-            currentArrowType = type
-        }
-        return currentArrowType
+    func setArrowType(current: Float, previous: Float) -> ArrowType {
+//        if UserDefaultsManager.shared.isLASKeySelected {
+                if current > previous {
+                    return .up
+                }
+                if current < previous {
+                    return .down
+                }
+//        }
+        return .stable
     }
+
+//    func checkArrowStable(type: ArrowType) -> ArrowType {
+//        if type != .stable {
+//            currentArrowType = type
+//        }
+//        return currentArrowType
+//    }
 }

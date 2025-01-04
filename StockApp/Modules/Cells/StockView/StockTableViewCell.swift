@@ -160,6 +160,7 @@ extension StockTableViewCell {
             self.containerView.backgroundColor = .black
         }
     }
+
     public func setArrow(arrow: ArrowType) {
         arrowView.setVisibility(arrow: arrow)
     }

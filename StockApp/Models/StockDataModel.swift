@@ -29,4 +29,6 @@ struct DataModel: Codable {
     var cei: String?
     var flo: String?
     var gco: String?
+
+    // TODO: Extension yazığ key kontorlü yap.
 }

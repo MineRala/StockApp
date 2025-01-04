@@ -27,5 +27,26 @@ struct MyPageDefaults: Codable {
 
 struct MyPage: Codable {
     var name: String
-    var key: String
+    var key: MyPageKey
 }
+
+enum MyPageKey: String, Codable {
+    case last = "las"
+    case percentageDifference = "pdd"
+    case difference = "ddi"
+    case low = "low"
+    case high = "hig"
+    case buy = "buy"
+    case sell = "sel"
+    case previousClose = "pdc"
+    case ceiling = "cei"
+    case floor = "flo"
+    case groupCode = "gco"
+}
+
+
+// TODO: Enum tut keyleri
+//enum MyPageKey: String {
+//    case las
+//
+//}

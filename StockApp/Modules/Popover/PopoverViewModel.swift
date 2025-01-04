@@ -59,9 +59,9 @@ extension PopoverViewModel: PopoverViewModelInterface {
             
             switch selectedViewOption {
             case .first:
-                UserDefaultsManager.shared.setValue(valueKey: selectedKey, valueName: selectedName, forKey: "firstSelectedView")
+                UserDefaultsManager.shared.setValue(valueKey: selectedKey.rawValue, valueName: selectedName, forKey: "firstSelectedView")
             case .second:
-                UserDefaultsManager.shared.setValue(valueKey: selectedKey, valueName: selectedName, forKey: "secondSelectedView")
+                UserDefaultsManager.shared.setValue(valueKey: selectedKey.rawValue, valueName: selectedName, forKey: "secondSelectedView")
             }
         }
     }

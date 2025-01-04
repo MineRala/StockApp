@@ -23,6 +23,7 @@ final class StockTableViewCellViewModel {
 // MARK: - StockTableViewCellViewModelInterface
 extension StockTableViewCellViewModel: StockTableViewCellViewModelInterface {
     func getValue(key: String, model: DataModel) -> String {
+        // TODO: las,ppd enum tut.
         if key == "las" {
             return model.las ?? "-"
         } else if key == "pdd" {

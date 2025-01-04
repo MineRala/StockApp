@@ -11,41 +11,17 @@ import SnapKit
 // MARK: - Class Bone
 final class ArrowView: UIView {
     // MARK: Attributes
-    private lazy var upImageView: UIImageView = {
+    private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(systemName: "chevron.up")
+        imageView.image = nil
         imageView.tintColor = .white
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
 
-    private lazy var downImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(systemName: "chevron.down")
-        imageView.tintColor = .white
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }()
+    private var imageTopConstraint: Constraint?
 
-    private lazy var emptyView: UIView = {
-        let emptyView = UIView()
-        emptyView.backgroundColor = .clear
-        emptyView.translatesAutoresizingMaskIntoConstraints = false
-        return emptyView
-    }()
-
-    private lazy var stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.spacing = 20
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.addArrangedSubview(upImageView)
-        stackView.addArrangedSubview(emptyView)
-        stackView.addArrangedSubview(downImageView)
-        return stackView
-    }()
 
     // MARK: Cons & Decons
     override init(frame: CGRect) {
@@ -57,16 +33,21 @@ final class ArrowView: UIView {
         super.init(coder: coder)
         setupView()
     }
+
 }
 
 // MARK: - Setup UI
 extension ArrowView {
     private func setupView() {
-        addSubview(stackView)
+        addSubview(imageView)
         self.layer.cornerRadius = 4
 
-        stackView.snp.makeConstraints { make in
+        imageView.snp.makeConstraints { make in
             make.width.equalToSuperview()
+            make.centerX.equalToSuperview()
+
+            self.imageTopConstraint = make.top.equalToSuperview().constraint
+
         }
     }
 
@@ -74,14 +55,15 @@ extension ArrowView {
         self.backgroundColor = arrow.viewColor
         switch arrow {
         case .down:
-            upImageView.isHidden = true
-            downImageView.isHidden = false
+            imageView.image = UIImage(systemName: "chevron.down")
+            imageTopConstraint?.update(offset: 25)
         case .up:
-            upImageView.isHidden = false
-            downImageView.isHidden = true
+            imageView.image = UIImage(systemName: "chevron.up")
+            imageTopConstraint?.update(offset: 0)
         case .stable:
-            upImageView.isHidden = true
-            downImageView.isHidden = true
+            imageView.image = nil
+            imageTopConstraint?.update(offset: 0)
         }
+        self.layoutIfNeeded()
     }
 }
