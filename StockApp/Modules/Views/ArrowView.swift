@@ -22,7 +22,6 @@ final class ArrowView: UIView {
 
     private var imageTopConstraint: Constraint?
 
-
     // MARK: Cons & Decons
     override init(frame: CGRect) {
         super.init(frame: frame)

@@ -30,5 +30,53 @@ struct DataModel: Codable {
     var flo: String?
     var gco: String?
 
-    // TODO: Extension yazığ key kontorlü yap.
 }
+
+extension DataModel: Equatable {
+    static func == (lhs: DataModel, rhs: DataModel) -> Bool {
+        lhs.las == rhs.las
+    }
+}
+
+extension DataModel {
+    /// `las` değerini güvenli bir şekilde Float olarak döndürür
+    var floatLas: Float {
+        las?.toFloat() ?? 0
+    }
+
+    /// DataModel alanları için anahtarlar
+    enum Key: String, CaseIterable, Codable {
+        case las, pdd, ddi, low, hig, buy, sel, pdc, cei, flo, gco
+
+        /// Enum'u ilgili `KeyPath`'e bağlama
+        var keyPath: PartialKeyPath<DataModel> {
+            switch self {
+            case .las: return \DataModel.las
+            case .pdd: return \DataModel.pdd
+            case .ddi: return \DataModel.ddi
+            case .low: return \DataModel.low
+            case .hig: return \DataModel.hig
+            case .buy: return \DataModel.buy
+            case .sel: return \DataModel.sel
+            case .pdc: return \DataModel.pdc
+            case .cei: return \DataModel.cei
+            case .flo: return \DataModel.flo
+            case .gco: return \DataModel.gco
+            }
+        }
+
+        /// Renk farklılığı gereken alanları belirler
+        var isDifferentColor: Bool {
+            [.pdd, .ddi].contains(self)
+        }
+    }
+
+    /// Verilen `Key` ile DataModel'den değeri alır
+    func getValue(for key: Key) -> String {
+        guard let value = self[keyPath: key.keyPath] as? String else {
+            return "-"
+        }
+        return value
+    }
+}
+

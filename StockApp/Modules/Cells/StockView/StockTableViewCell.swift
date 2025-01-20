@@ -59,7 +59,13 @@ final class StockTableViewCell: UITableViewCell {
     }()
 
     // MARK: Properties
-    private lazy var viewModel: StockTableViewCellViewModelInterface = StockTableViewCellViewModel(view: self)
+    var viewModel: StockTableViewCellViewModel? {
+        didSet {
+            if let viewModel {
+                updateUI(viewModel: viewModel)
+            }
+        }
+    }
 
     // MARK: Cons & Decons
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -131,40 +137,62 @@ extension StockTableViewCell {
 
 // MARK: - Set Cell
 extension StockTableViewCell {
-    public func setTitle(title: String) {
-        titleLabel.text = title
-    }
-
-    public func setData(model: DataModel) {
-        dateLabel.text = model.clo
-
-        updateValueLabel(valueLabel: valueLabelOne, key: UserDefaultsManager.shared.firstSelectedViewKey, model: model)
-        updateValueLabel(valueLabel: valueLabelTwo, key: UserDefaultsManager.shared.secondSelectedViewKey, model: model)
-    }
-
-    private func updateValueLabel(valueLabel: UILabel, key: String?, model: DataModel) {
-        guard let key else {
-            valueLabel.text = nil
-            valueLabel.textColor = .white
-            return
-        }
-
-        valueLabel.text = viewModel.getValue(key: key, model: model)
-
-        valueLabel.textColor = viewModel.isDifferentValueColor(key: key) ? valueLabel.text?.checkNumberSign() : .white
-    }
-
-    public func setHeighlited() {
+//    public func setTitle(title: String) {
+//        titleLabel.text = title
+//    }
+//
+//    public func setData(model: DataModel) {
+//        dateLabel.text = model.clo
+//
+//        updateValueLabel(valueLabel: valueLabelOne, key: UserDefaultsManager.shared.firstSelectedViewKey, model: model)
+//        updateValueLabel(valueLabel: valueLabelTwo, key: UserDefaultsManager.shared.secondSelectedViewKey, model: model)
+//    }
+//
+//    private func updateValueLabel(valueLabel: UILabel, key: String?, model: DataModel) {
+//        guard let key else {
+//            valueLabel.text = nil
+//            valueLabel.textColor = .white
+//            return
+//        }
+//
+//        valueLabel.text = viewModel.getValue(key: key, model: model)
+//
+//        valueLabel.textColor = viewModel.isDifferentValueColor(key: key) ? valueLabel.text?.checkNumberSign() : .white
+//    }
+//
+    public func setHeighlited(isHighlighted: Bool) {
+        guard isHighlighted else { return }
         containerView.backgroundColor = .gray
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.containerView.backgroundColor = .black
         }
     }
+//
+//    public func setArrow(arrow: ArrowType) {
+//        arrowView.setVisibility(arrow: arrow)
+//    }
 
-    public func setArrow(arrow: ArrowType) {
-        arrowView.setVisibility(arrow: arrow)
+//    private func updateUI(viewModel: StockTableViewCellViewModel) {
+//        titleLabel.text = viewModel.title
+//        dateLabel.text = viewModel.date
+//        setHeighlited(isHighlighted: viewModel.isHighlighted)
+//        arrowView.setVisibility(arrow: viewModel.arrowType)
+//        update(label: valueLabelOne, text: viewModel.valueOne, textColor: viewModel.valueOneColor)
+//        update(label: valueLabelTwo, text: viewModel.valueTwo, textColor: viewModel.valueTwoColor)
+//
+//    }
+
+    private func updateUI(viewModel: StockTableViewCellViewModel) {
+        titleLabel.text = viewModel.title
+        dateLabel.text = viewModel.date
+        setHeighlited(isHighlighted: viewModel.isHighlighted)
+        arrowView.setVisibility(arrow: viewModel.arrowType)
+        update(label: valueLabelOne, text: viewModel.valueOne, textColor: viewModel.valueOneColor)
+        update(label: valueLabelTwo, text: viewModel.valueTwo, textColor: viewModel.valueTwoColor)
+    }
+
+    private func update(label: UILabel, text: String, textColor: UIColor) {
+        label.text = text
+        label.textColor = textColor
     }
 }
-
-// MARK: - StockTableViewCellInterface
-extension StockTableViewCell: StockTableViewCellInterface {}

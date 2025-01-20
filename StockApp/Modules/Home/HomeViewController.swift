@@ -12,7 +12,6 @@ protocol HomeViewInterface: AnyObject {
     func setupUI()
     func setSelectedViewText()
     func tableViewReload()
-    func updateCell(index: Int, current: DataModel, previous: DataModel)
 }
 
 //MARK: - Class Bone
@@ -105,13 +104,11 @@ extension HomeViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "StockTableViewCell",for: indexPath) as? StockTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "StockTableViewCell",for: indexPath) as? StockTableViewCell,
+              let cellViewModel = viewModel.cellViewModel(forRowAt: indexPath) else {
             return UITableViewCell()
         }
-        cell.setTitle(title: viewModel.getCod(index: indexPath.row))
-        if let model = viewModel.getStockData(index: indexPath.row) {
-            cell.setData(model: model)
-        }
+        cell.viewModel = cellViewModel
         cell.selectionStyle = .none
         cell.backgroundColor = .black
         return cell
@@ -194,18 +191,6 @@ extension HomeViewController: HomeViewInterface {
     func tableViewReload() {
         DispatchQueue.main.async {
             self.tableView.reloadData()
-        }
-    }
-
-    func updateCell(index: Int, current: DataModel, previous: DataModel) {
-        guard let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? StockTableViewCell  else { return }
-        if viewModel.isCloValueDifferent(current: current, previous: previous) {
-            cell.setHeighlited()
-        }
-
-        if let currentLasValue = current.las?.toFloat(), let previousLasValue = previous.las?.toFloat(), viewModel.isLasValueDifferent(currentLasValue: currentLasValue, previousLasValue: previousLasValue) {
-            let newArrowType = viewModel.setArrowType(current: currentLasValue, previous: previousLasValue)
-            cell.setArrow(arrow: newArrowType)
         }
     }
 }

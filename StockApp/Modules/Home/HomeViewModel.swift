@@ -14,12 +14,8 @@ protocol HomeViewModelInterface: AnyObject {
     func deinitt()
     func viewDidLoad()
     func getCod(index: Int) -> String
-    func getStockData(index: Int) -> DataModel?
     func getMyPage() -> [MyPage]
-    func isCloValueDifferent(current: DataModel, previous: DataModel) -> Bool
-    func isLasValueDifferent(currentLasValue: Float, previousLasValue: Float) -> Bool
-    func setArrowType(current: Float, previous: Float) -> ArrowType
-//    func checkArrowStable(type: ArrowType) -> ArrowType
+    func cellViewModel(forRowAt indexPath: IndexPath) -> StockTableViewCellViewModel?
 }
 
 // MARK: - Class Bone
@@ -27,14 +23,17 @@ final class HomeViewModel {
     private weak var view: HomeViewInterface?
     private var myPageDefaults = [MyPageDefaults]()
     private var myPage = [MyPage]()
-    private var stockData: [DataModel]?
+    private var stockData: [DataModel]? {
+        didSet {
+            guard let stockData, let oldValue else { return }
+            setCellViewModels(from: oldValue, and: stockData)
+        }
+    }
 
-    private var previousDataForHeighlity = [DataModel]()
-    private var previousDataForArrow = [DataModel]()
+    private var cellViewModels: [StockTableViewCellViewModel] = []
     private let storeManager: NetworkManagerProtocol
     private var timer: Timer?
 
-//    var currentArrowType: ArrowType = .stable
     init(view: HomeViewInterface, storeManager: NetworkManagerProtocol = NetworkManager.shared) {
         self.view = view
         self.storeManager = storeManager
@@ -45,15 +44,14 @@ final class HomeViewModel {
     }
 
     @objc private func fetchData() {
-        NetworkManager.shared.makeRequest(endpoint: .stockModel, type: StockModel.self) { result in
+        NetworkManager.shared.makeRequest(endpoint: .stockModel, type: StockModel.self) { [weak self] result in
+            guard let self else { return }
             switch result {
             case .success(let stockModel):
-                print("Başarıyla alındı: \(stockModel)")
                 self.myPageDefaults = stockModel.myPageDefaults
                 self.myPage = stockModel.myPage
                 self.configureSelectedViewTitles()
                 self.fetchSelectedStockData()
-                self.view?.tableViewReload()
             case .failure(let error):
                 print(error)
             }
@@ -63,32 +61,59 @@ final class HomeViewModel {
     func fetchSelectedStockData() {
         guard let first = UserDefaultsManager.shared.firstSelectedViewKey, let second = UserDefaultsManager.shared.secondSelectedViewKey else { return }
 
-        NetworkManager.shared.makeRequest(endpoint: .stockDataModel(fields: "\(first),\(second)", stcs: generateSTCSString()), type: StockDataModel.self, completed: { result in
+        NetworkManager.shared.makeRequest(endpoint: .stockDataModel(fields: "\(first),\(second)", stcs: generateSTCSString()), type: StockDataModel.self, completed: { [weak self] result in
+            guard let self else { return }
             switch result {
             case .success(let stockDataModel):
-                print("Başarıyla alındı: \(stockDataModel)")
-                let newData = stockDataModel.dataModel
-                let previousData = self.stockData ?? []
-                DispatchQueue.main.async {
-                    self.stockData = newData
-                    self.view?.tableViewReload()
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                    self.uiChangedRows(previousData: previousData, currentData: newData)
-                }
+                self.stockData = stockDataModel.dataModel
+                self.view?.tableViewReload()
             case .failure(let error):
                 print(error)
             }
         })
     }
 
-    private func uiChangedRows(previousData: [DataModel], currentData: [DataModel]) {
-        for (index, current) in currentData.enumerated() {
-            if index < previousData.count {
-                let previous = previousData[index]
-                self.view?.updateCell(index: index, current: current, previous: previous)
-            }
+    private func setCellViewModels(from previousDataArray: [DataModel], and newDataArray: [DataModel]) {
+        cellViewModels = previousDataArray.enumerated().compactMap { index, data  in
+            getCellViewModel(from: data, and: newDataArray[index], index: index)
         }
+    }
+
+    private func getCellViewModel(from previousData: DataModel, and newData: DataModel, index: Int) -> StockTableViewCellViewModel {
+        let arrowType = calculateArrowType(from: previousData, to: newData)
+
+        let firstKey = getSelectedKey(default: .las, from: UserDefaultsManager.shared.firstSelectedViewKey)
+        let secondKey = getSelectedKey(default: .pdd, from: UserDefaultsManager.shared.secondSelectedViewKey)
+
+        let valueOne = newData.getValue(for: firstKey)
+        let valueTwo = newData.getValue(for: secondKey)
+
+        print(previousData.getValue(for: firstKey), valueOne)
+
+        return .init(
+            title: getCod(index: index),
+            date: newData.clo,
+            isHighlighted: newData.clo != previousData.clo,
+            arrowType: arrowType,
+            valueOne: valueOne,
+            valueTwo: valueTwo,
+            valueOneColor:  firstKey.isDifferentColor ? valueOne.checkNumberSign() : .white,
+            valueTwoColor: secondKey.isDifferentColor ? valueTwo.checkNumberSign() : .white
+        )
+    }
+
+    private func calculateArrowType(from previousData: DataModel, to newData: DataModel) -> ArrowType {
+        if newData.floatLas > previousData.floatLas {
+            return .up
+        } else if newData.floatLas == previousData.floatLas {
+            return .stable
+        } else {
+            return .down
+        }
+    }
+
+    private func getSelectedKey(default defaultKey: DataModel.Key, from userKey: String?) -> DataModel.Key {
+        return DataModel.Key(rawValue: userKey ?? "") ?? defaultKey
     }
 
     func observeUserDefaultsChanges() {
@@ -127,7 +152,7 @@ final class HomeViewModel {
 // MARK: - HomeViewModelInterface
 extension HomeViewModel: HomeViewModelInterface {
     var numberOfRowsInSection: Int {
-        myPageDefaults.count
+        cellViewModels.count
     }
 
     var heightForRowAt: Double {
@@ -146,58 +171,15 @@ extension HomeViewModel: HomeViewModelInterface {
         observeUserDefaultsChanges()
     }
 
-    func getCod(index: Int) -> String{
+    func getCod(index: Int) -> String {
         myPageDefaults[index].cod
-    }
-
-    func getStockData(index: Int) -> DataModel? {
-        if let stockData = stockData?[index] {
-            return stockData
-        }
-        return nil
     }
 
     func getMyPage() -> [MyPage] {
         myPage
     }
 
-    func getArrowType(current: DataModel, previous: DataModel) -> ArrowType {
-        let currentPrice = current.las?.toFloat() ?? 0.0
-        let previousPrice = previous.las?.toFloat() ?? 0.0
-
-        if currentPrice < previousPrice {
-            return .down
-        } else if currentPrice > previousPrice {
-            return .up
-        } else {
-            return .stable
-        }
+    func cellViewModel(forRowAt indexPath: IndexPath) -> StockTableViewCellViewModel? {
+        cellViewModels[safe: indexPath.row]
     }
-
-    func isCloValueDifferent(current: DataModel, previous: DataModel) -> Bool {
-        current.clo != previous.clo
-    }
-
-    func isLasValueDifferent(currentLasValue: Float, previousLasValue: Float) -> Bool {
-        currentLasValue != previousLasValue
-    }
-
-    func setArrowType(current: Float, previous: Float) -> ArrowType {
-//        if UserDefaultsManager.shared.isLASKeySelected {
-                if current > previous {
-                    return .up
-                }
-                if current < previous {
-                    return .down
-                }
-//        }
-        return .stable
-    }
-
-//    func checkArrowStable(type: ArrowType) -> ArrowType {
-//        if type != .stable {
-//            currentArrowType = type
-//        }
-//        return currentArrowType
-//    }
 }

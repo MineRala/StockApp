@@ -5,52 +5,36 @@
 //  Created by Mine Rala on 22.09.2024.
 //
 
-import Foundation
+import UIKit
 
-protocol StockTableViewCellViewModelInterface: AnyObject  {
-    func getValue(key: String, model: DataModel) -> String
-    func isDifferentValueColor(key: String) -> Bool
-}
+struct StockTableViewCellViewModel {
 
-final class StockTableViewCellViewModel {
-    private weak var view: StockTableViewCellInterface?
+    private(set) var title: String
+    private(set) var date: String
+    private(set) var isHighlighted: Bool
+    private(set) var arrowType: ArrowType
+    private(set) var valueOne: String
+    private(set) var valueTwo: String
+    private(set) var valueOneColor: UIColor
+    private(set) var valueTwoColor: UIColor
 
-    init(view: StockTableViewCellInterface) {
-        self.view = view
-    }
-}
-
-// MARK: - StockTableViewCellViewModelInterface
-extension StockTableViewCellViewModel: StockTableViewCellViewModelInterface {
-    func getValue(key: String, model: DataModel) -> String {
-        // TODO: las,ppd enum tut.
-        if key == "las" {
-            return model.las ?? "-"
-        } else if key == "pdd" {
-            return model.pdd ?? "-"
-        } else if key == "ddi" {
-            return model.ddi ?? "-"
-        } else if key == "low" {
-            return model.low ?? "-"
-        } else if key == "hig" {
-            return model.hig ?? "-"
-        } else if key == "buy" {
-            return model.buy ?? "-"
-        } else if key == "sel" {
-            return model.sel ?? "-"
-        } else if key == "pdc" {
-            return model.pdc ?? "-"
-        } else if key == "cei" {
-            return model.cei ?? "-"
-        } else if key == "flo" {
-            return model.flo ?? "-"
-        } else if key == "gco" {
-            return model.gco ?? "-"
-        }
-        return ""
-    }
-
-    func isDifferentValueColor(key: String) -> Bool {
-        key == "ddi" || key == "pdd"
+    init(
+        title: String,
+        date: String,
+        isHighlighted: Bool,
+        arrowType: ArrowType,
+        valueOne: String,
+        valueTwo: String,
+        valueOneColor: UIColor,
+        valueTwoColor: UIColor
+    ) {
+        self.title = title
+        self.date = date
+        self.isHighlighted = isHighlighted
+        self.arrowType = arrowType
+        self.valueOne = valueOne
+        self.valueTwo = valueTwo
+        self.valueOneColor = valueOneColor
+        self.valueTwoColor = valueTwoColor
     }
 }
