@@ -25,12 +25,28 @@ final class HomeViewModel {
     private var myPage = [MyPage]()
     private var stockData: [DataModel]? {
         didSet {
-            guard let stockData, let oldValue else { return }
+            guard let stockData = stockData, let oldValue = oldValue else { return }
             setCellViewModels(from: oldValue, and: stockData)
+
+            let changedIndexPaths = stockData.enumerated().compactMap { (index, newData) -> IndexPath? in
+                if let oldIndex = oldValue.firstIndex(where: { $0.tke == newData.tke }),
+                   newData.clo != oldValue[oldIndex].clo {
+                    return IndexPath(row: index, section: 0)
+                }
+                return nil
+            }
+
+            if !changedIndexPaths.isEmpty {
+                DispatchQueue.main.async { [weak self] in
+                    guard let self else { return }
+                    self.view?.highlightCells(at: changedIndexPaths)
+                }
+            }
         }
     }
 
-    private var cellViewModels: [StockTableViewCellViewModel] = []
+
+    public var cellViewModels: [StockTableViewCellViewModel] = []
     private let storeManager: NetworkManagerProtocol
     private var timer: Timer?
 
@@ -74,8 +90,24 @@ final class HomeViewModel {
     }
 
     private func setCellViewModels(from previousDataArray: [DataModel], and newDataArray: [DataModel]) {
-        cellViewModels = previousDataArray.enumerated().compactMap { index, data  in
-            getCellViewModel(from: data, and: newDataArray[index], index: index)
+        cellViewModels = newDataArray.enumerated().map { index, newData in
+            let previousData = previousDataArray[index]
+            if newData.floatLas != previousData.floatLas {
+                // Eğer floatLas veya clo değeri değiştiyse yeni view model oluştur
+                return getCellViewModel(from: previousData, and: newData, index: index)
+            } else {
+                // Eğer sadece clo değiştiyse mevcut view model'i güncelle
+                if var currentViewModel = cellViewModels[safe: index] {
+                    // Mevcut view model üzerinde clo değerini güncelle
+                    if previousData.clo != newData.clo {
+                        currentViewModel.withUpdatedDate(newDate: newData.clo)
+                    }
+                    return currentViewModel
+                } else {
+                    // Eğer mevcut view model yoksa, yeni bir view model oluştur
+                    return getCellViewModel(from: previousData, and: newData, index: index)
+                }
+            }
         }
     }
 
@@ -93,7 +125,6 @@ final class HomeViewModel {
         return .init(
             title: getCod(index: index),
             date: newData.clo,
-            isHighlighted: newData.clo != previousData.clo,
             arrowType: arrowType,
             valueOne: valueOne,
             valueTwo: valueTwo,

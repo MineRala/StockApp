@@ -12,9 +12,9 @@ final class UserDefaultsManager {
     
     static let shared = UserDefaultsManager()
     private let defaults = UserDefaults.standard
-    
+
     private init() {}
-    
+
     var firstSelectedViewKey: String? {
         return getValue(forKey: "firstSelectedView").0
     }

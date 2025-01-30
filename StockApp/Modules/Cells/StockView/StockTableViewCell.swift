@@ -137,55 +137,17 @@ extension StockTableViewCell {
 
 // MARK: - Set Cell
 extension StockTableViewCell {
-//    public func setTitle(title: String) {
-//        titleLabel.text = title
-//    }
-//
-//    public func setData(model: DataModel) {
-//        dateLabel.text = model.clo
-//
-//        updateValueLabel(valueLabel: valueLabelOne, key: UserDefaultsManager.shared.firstSelectedViewKey, model: model)
-//        updateValueLabel(valueLabel: valueLabelTwo, key: UserDefaultsManager.shared.secondSelectedViewKey, model: model)
-//    }
-//
-//    private func updateValueLabel(valueLabel: UILabel, key: String?, model: DataModel) {
-//        guard let key else {
-//            valueLabel.text = nil
-//            valueLabel.textColor = .white
-//            return
-//        }
-//
-//        valueLabel.text = viewModel.getValue(key: key, model: model)
-//
-//        valueLabel.textColor = viewModel.isDifferentValueColor(key: key) ? valueLabel.text?.checkNumberSign() : .white
-//    }
-//
-    public func setHeighlited(isHighlighted: Bool) {
-        guard isHighlighted else { return }
+    public func setHeighlited() {
+        dateLabel.text = viewModel?.date
         containerView.backgroundColor = .gray
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.containerView.backgroundColor = .black
         }
     }
-//
-//    public func setArrow(arrow: ArrowType) {
-//        arrowView.setVisibility(arrow: arrow)
-//    }
-
-//    private func updateUI(viewModel: StockTableViewCellViewModel) {
-//        titleLabel.text = viewModel.title
-//        dateLabel.text = viewModel.date
-//        setHeighlited(isHighlighted: viewModel.isHighlighted)
-//        arrowView.setVisibility(arrow: viewModel.arrowType)
-//        update(label: valueLabelOne, text: viewModel.valueOne, textColor: viewModel.valueOneColor)
-//        update(label: valueLabelTwo, text: viewModel.valueTwo, textColor: viewModel.valueTwoColor)
-//
-//    }
 
     private func updateUI(viewModel: StockTableViewCellViewModel) {
         titleLabel.text = viewModel.title
         dateLabel.text = viewModel.date
-        setHeighlited(isHighlighted: viewModel.isHighlighted)
         arrowView.setVisibility(arrow: viewModel.arrowType)
         update(label: valueLabelOne, text: viewModel.valueOne, textColor: viewModel.valueOneColor)
         update(label: valueLabelTwo, text: viewModel.valueTwo, textColor: viewModel.valueTwoColor)

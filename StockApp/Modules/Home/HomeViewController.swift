@@ -12,6 +12,7 @@ protocol HomeViewInterface: AnyObject {
     func setupUI()
     func setSelectedViewText()
     func tableViewReload()
+    func highlightCells(at indexPaths: [IndexPath])
 }
 
 //MARK: - Class Bone
@@ -112,6 +113,17 @@ extension HomeViewController: UITableViewDataSource {
         cell.selectionStyle = .none
         cell.backgroundColor = .black
         return cell
+    }
+
+    func highlightCells(at indexPaths: [IndexPath]) {
+        for indexPath in indexPaths {
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                if  let cell = self.tableView.cellForRow(at: indexPath) as? StockTableViewCell {
+                    cell.setHeighlited()
+                }
+            }
+        }
     }
 }
 

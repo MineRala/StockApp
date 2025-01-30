@@ -8,10 +8,8 @@
 import UIKit
 
 struct StockTableViewCellViewModel {
-
     private(set) var title: String
     private(set) var date: String
-    private(set) var isHighlighted: Bool
     private(set) var arrowType: ArrowType
     private(set) var valueOne: String
     private(set) var valueTwo: String
@@ -21,7 +19,6 @@ struct StockTableViewCellViewModel {
     init(
         title: String,
         date: String,
-        isHighlighted: Bool,
         arrowType: ArrowType,
         valueOne: String,
         valueTwo: String,
@@ -30,11 +27,14 @@ struct StockTableViewCellViewModel {
     ) {
         self.title = title
         self.date = date
-        self.isHighlighted = isHighlighted
         self.arrowType = arrowType
         self.valueOne = valueOne
         self.valueTwo = valueTwo
         self.valueOneColor = valueOneColor
         self.valueTwoColor = valueTwoColor
     }
+
+      mutating func withUpdatedDate(newDate: String) {
+          self.date = newDate
+      }
 }

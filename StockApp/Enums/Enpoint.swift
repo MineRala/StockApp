@@ -21,6 +21,9 @@ enum Endpoint {
 //            return URL(string: "https://run.mocky.io/v3/e6b91584-0976-40b8-945a-aece9447a4d1")
             return URL(string: "\(Constant.baseURL)ForeksMobileInterviewSettings")
         case .stockDataModel(let fields, let stcs):
+            var a = URL(string: "\(Constant.baseURL)ForeksMobileInterview?fields=\(fields)&stcs=\(stcs)")
+            print(a)
+//            return URL(string: "\(Constant.baseURL)ForeksMobileInterview?fields==las,sel&stcs=XU100.I.BIST~XU050.I.BIST")
             return URL(string: "\(Constant.baseURL)ForeksMobileInterview?fields=\(fields)&stcs=\(stcs)")
 //            if  NetworkManager.shared.urlArray.count > NetworkManager.shared.mockStackDataModelIndex {
 //                let url = NetworkManager.shared.urlArray[NetworkManager.shared.mockStackDataModelIndex]
